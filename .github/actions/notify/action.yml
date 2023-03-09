@@ -47,7 +47,7 @@ runs:
       shell: bash
       continue-on-error: true
       run: |
-        result=$(echo ${{ toJson(github.workflow) }} | jq --raw-input --slurp '. | @html | .[0:80]')
+        result=$(echo ${{ toJson(github.workflow) }} | jq --raw-input --slurp --raw-output '. | @html | .[0:80]')
         echo $result
         echo "result=$result" >> $GITHUB_OUTPUT
     - name: Get short SHA
@@ -106,7 +106,7 @@ runs:
             "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
             "embeds": [{
               "color": "${{ inputs.color }}",
-              "title": "${{ inputs.title}}: [${{ fromJson(steps.sanitize-workflow-name.outputs.result) }}]",
+              "title": "${{ inputs.title}}: [${{ steps.sanitize-workflow-name.outputs.result }}]",
               "fields": ${{steps.embed-fields.outputs.fields}}
             }]
           }')
