@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Notify
-        uses: ./actions/notify
+        uses: ./.github/actions/notify
         with:
           color: "16711680"
           title: "Failed"
@@ -40,9 +40,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: Previous Conclusion
         id: previous
-        uses: ./actions/previous
+        uses: ./.github/actions/previous
       - name: Notify
-        uses: ./actions/notify
+        uses: ./.github/actions/notify
         if: ${{ contains(fromJson(steps.previous.outputs.result), 'failure') }}
         with:
           color: "65280"
