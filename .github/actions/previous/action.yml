@@ -13,7 +13,7 @@ runs:
       id: previous
       shell: bash
       run: |
-        resp=$(gh run list -w ${{ github.workflow }} \
+        resp=$(gh run list -w ${{ github.workflow_ref }} \
           -R ${{ github.repository }} \
           --branch ${{ github.ref_name }} \
           --json databaseId,status,conclusion)
