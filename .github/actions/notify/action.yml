@@ -106,7 +106,7 @@ runs:
             "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
             "embeds": [{
               "color": "${{ inputs.color }}",
-              "title": "${{ inputs.title}}: [${{ steps.sanitize-workflow-name.outputs.result }}]",
+              "title": "${{ inputs.title}}: [${{ fromJson(steps.sanitize-workflow-name.outputs.result) }}]",
               "fields": ${{steps.embed-fields.outputs.fields}}
             }]
           }')
