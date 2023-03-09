@@ -22,9 +22,8 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v3
       - name: Notify
-        uses: ./.github/actions/notify
+        uses: zzak/action-discord/.github/actions/notify
         with:
           color: "16711680"
           title: "Failed"
@@ -37,12 +36,11 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v3
       - name: Previous Conclusion
         id: previous
-        uses: ./.github/actions/previous
+        uses: zzak/action-discord/.github/actions/previous
       - name: Notify
-        uses: ./.github/actions/notify
+        uses: zzak/action-discord/.github/actions/notify
         if: ${{ contains(fromJson(steps.previous.outputs.result), 'failure') }}
         with:
           color: "65280"
