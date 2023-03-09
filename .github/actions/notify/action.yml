@@ -47,7 +47,7 @@ runs:
       shell: bash
       continue-on-error: true
       run: |
-        result=$(echo ${{ github.workflow }} | jq -cn '. | @html | .[0:80]')
+        result=$(echo '${{ toJson(github.workflow) }}' | jq -cn '. | @html | .[0:80]')
         echo $result
         echo "result=$result" >> $GITHUB_OUTPUT
     - name: Get short SHA
