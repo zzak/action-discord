@@ -1,0 +1,23 @@
+name: Previous Conclusion
+description: Returns the conclusion of the previous workflow run
+outputs:
+  result:
+    description: Conclusion of the previous workflow run
+    value: ${{ steps.previouss.outputs.result }}
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Get conclusion of last completed run
+      id: previous
+      shell: bash
+      run: |
+        resp=$(gh run list -w ${{ github.workflow }} \
+          -R ${{ github.repository }} \
+          --branch ${{ github.ref_name }} \
+          --json databaseId,status,conclusion)
+
+        result=$(echo $resp | jq -c '[.[] | select(.status == "completed")] | first | .conclusion')
+        echo $result
+        echo "result=$result" >> $GITHUB_OUTPUT

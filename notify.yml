@@ -1,0 +1,50 @@
+name: Notify
+
+on:
+  workflow_call:
+    secrets:
+      DISCORD_WEBHOOK:
+        required: true
+    inputs:
+      result:
+        type: string
+        required: true
+        description: Conclusion of the caller workflow
+
+permissions:
+  contents: read
+
+jobs:
+  notify_on_fail:
+    name: Notify on fail
+    runs-on: ubuntu-latest
+    if: ${{ inputs.result == 'failure' }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Notify
+        uses: ./actions/notify
+        with:
+          color: "16711680"
+          title: "Failed"
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+
+  notify_on_fixed:
+    name: Notify when fixed
+    runs-on: ubuntu-latest
+    if: ${{ inputs.result == 'success' }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Previous Conclusion
+        id: previous
+        uses: ./actions/previous
+      - name: Notify
+        uses: ./actions/notify
+        if: ${{ contains(fromJson(steps.previous.outputs.result), 'failure') }}
+        with:
+          color: "65280"
+          title: "Fixed"
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
