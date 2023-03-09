@@ -42,9 +42,21 @@ runs:
         result=$(echo $resp | jq -c '.commit | .message | @html | .[0:100]')
         echo $result
         echo "result=$result" >> $GITHUB_OUTPUT
-    - name: Get short SHA
+    - name: Sanitize workflow name
+      id: sanitize-workflow-name
       shell: bash
-      run: echo "SHORT_SHA=$(printf '%.8s' '${{ github.sha }}')" >> $GITHUB_ENV
+      continue-on-error: true
+      run: |
+        result=$(echo ${{ github.workflow }} | jq -cn '. | @html | .[0:80]')
+        echo $result
+        echo "result=$result" >> $GITHUB_OUTPUT
+    - name: Get short SHA
+      id: short-sha
+      shell: bash
+      run: |
+        result=$(printf '%.8s' '${{ github.sha }}')
+        echo $result
+        echo "result=$result" >> $GITHUB_OUTPUT
     - name: Set embed fields
       id: embed-fields
       shell: bash
@@ -61,7 +73,7 @@ runs:
         },
         {
           name: "Commit",
-          value: "[${{ env.SHORT_SHA }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})",
+          value: "[${{ steps.short-sha.outputs.result }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})",
           inline: true
         },
         {
@@ -94,7 +106,7 @@ runs:
             "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
             "embeds": [{
               "color": "${{ inputs.color }}",
-              "title": "${{ inputs.title}}: [${{ github.workflow }}]",
+              "title": "${{ inputs.title}}: [${{ steps.sanitize-workflow-name.outputs.result }}]",
               "fields": ${{steps.embed-fields.outputs.fields}}
             }]
           }')
