@@ -3,7 +3,7 @@ description: Returns the conclusion of the previous workflow run
 outputs:
   result:
     description: Conclusion of the previous workflow run
-    value: ${{ steps.previouss.outputs.result }}
+    value: ${{ steps.previous.outputs.result }}
 
 runs:
   using: "composite"
