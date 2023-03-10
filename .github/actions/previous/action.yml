@@ -23,6 +23,6 @@ runs:
           -R ${{ github.repository }} \
           --branch ${{ github.ref_name }} \
           --json databaseId,status,conclusion)
-        result=$(echo $resp | jq -c '[.[] | select(.status == "completed")] | first | .conclusion')
+        result=$(echo $resp | jq --compact-output '[.[] | select(.status == "completed")] | first | .conclusion')
         echo $result
         echo "result=$result" >> $GITHUB_OUTPUT
