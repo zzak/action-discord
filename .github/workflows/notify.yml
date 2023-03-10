@@ -32,14 +32,18 @@ jobs:
           echo $color
           echo "color=$color" >> $GITHUB_OUTPUT
 
-          title=$(echo ${{ toJson(inputs.result) }} | jq --compact-output --raw-output --raw-input '(if .previous == "success" and .result == "success" then "Passing" else (if .previous == "failure" and .result == "success" then "Fixed" else (if .previous == "failure" and .result == "failure" then "Still Failing" else "Failed" end) end) end)')
+          title=$(echo '{
+            "previous": ${{ steps.previous.outputs.result }},
+            "result": ${{ toJson(inputs.result) }}
+          }' | jq --compact-output --raw-output \
+            '(if .previous == "success" and .result == "success" then "Passing" else (if .previous == "failure" and .result == "success" then "Fixed" else (if .previous == "failure" and .result == "failure" then "Still Failing" else "Failed" end) end) end)')
           echo $title
           echo "title=$title" >> $GITHUB_OUTPUT
       - name: Notify
         uses: zzak/action-discord/.github/actions/notify@main
         with:
-          color: ${{ steps.status.outputs.result.color }}
-          title: ${{ steps.status.outputs.result.title }}
+          color: ${{ steps.status.outputs.color }}
+          title: ${{ steps.status.outputs.title }}
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
 
   notify_on_fixed:
