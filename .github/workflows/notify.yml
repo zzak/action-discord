@@ -15,10 +15,9 @@ permissions:
   contents: read
 
 jobs:
-  notify_on_fail:
-    name: Notify on fail
+  notify:
+    name: Notify
     runs-on: ubuntu-latest
-    if: ${{ inputs.result == 'failure' }}
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
@@ -28,7 +27,8 @@ jobs:
       - name: Setup statuses
         id: status
         run: |
-          color=$(echo ${{ steps.previous.outputs.result }} | jq --compact-output --raw-output --raw-input '(if . == "success" then "65280" else "16711680" end)')
+          color=$(echo ${{ input.result }} | jq --compact-output --raw-output --raw-input \
+            '(if . == "success" then "65280" else "16711680" end)')
           echo $color
           echo "color=$color" >> $GITHUB_OUTPUT
 
@@ -36,7 +36,11 @@ jobs:
             "previous": ${{ steps.previous.outputs.result }},
             "result": ${{ toJson(inputs.result) }}
           }' | jq --compact-output --raw-output \
-            '(if .previous == "success" and .result == "success" then "Passing" else (if .previous == "failure" and .result == "success" then "Fixed" else (if .previous == "failure" and .result == "failure" then "Still Failing" else "Failed" end) end) end)')
+            '(if .previous == "success" and .result == "success" then "Passing" else
+              (if .previous == "failure" and .result == "success" then "Fixed" else
+                (if .previous == "failure" and .result == "failure" then "Still Failing" else "Failed" end)
+              end)
+            end)')
           echo $title
           echo "title=$title" >> $GITHUB_OUTPUT
       - name: Notify
@@ -44,22 +48,4 @@ jobs:
         with:
           color: ${{ steps.status.outputs.color }}
           title: ${{ steps.status.outputs.title }}
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-
-  notify_on_fixed:
-    name: Notify when fixed
-    runs-on: ubuntu-latest
-    if: ${{ inputs.result == 'success' }}
-    env:
-      GH_TOKEN: ${{ github.token }}
-    steps:
-      - name: Previous Conclusion
-        id: previous
-        uses: zzak/action-discord/.github/actions/previous@main
-      - name: Notify
-        uses: zzak/action-discord/.github/actions/notify@main
-        if: ${{ contains(fromJson(steps.previous.outputs.result), 'failure') }}
-        with:
-          color: "65280"
-          title: "Fixed"
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
