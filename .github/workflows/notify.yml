@@ -32,7 +32,7 @@ jobs:
           echo $color
           echo "color=$color" >> $GITHUB_OUTPUT
 
-          title=$(echo ${{ inputs.result }} | jq --compact-output --raw-output --raw-input '(if .previous == "success" and .result == "success" then "Passing" else (if .previous == "failure" and .result == "success" then "Fixed" else (if .previous == "failure" and .result == "failure" then "Still Failing" else "Failed" end) end) end)')
+          title=$(echo ${{ toJson(inputs.result) }} | jq --compact-output --raw-output --raw-input '(if .previous == "success" and .result == "success" then "Passing" else (if .previous == "failure" and .result == "success" then "Fixed" else (if .previous == "failure" and .result == "failure" then "Still Failing" else "Failed" end) end) end)')
           echo $title
           echo "title=$title" >> $GITHUB_OUTPUT
       - name: Notify
