@@ -45,6 +45,7 @@ jobs:
           echo "title=$title" >> $GITHUB_OUTPUT
       - name: Notify
         uses: zzak/action-discord/.github/actions/notify@main
+        if: ${{ steps.status.outputs.title != 'Passing' }}
         with:
           color: ${{ steps.status.outputs.color }}
           title: ${{ steps.status.outputs.title }}
