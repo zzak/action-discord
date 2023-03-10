@@ -16,7 +16,7 @@ runs:
         path=$(gh api \
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
-          /repos/${{ github.repository }}/actions/runs/${{ github.run_id }} | jq .path)
+          /repos/${{ github.repository }}/actions/runs/${{ github.run_id }} | jq --raw-output .path)
         echo $path
 
         resp=$(gh run list -w "$path" \
