@@ -36,9 +36,11 @@ jobs:
             "previous": ${{ steps.previous.outputs.result }},
             "result": ${{ toJson(inputs.result) }}
           }' | jq --compact-output --raw-output \
-            '(if .previous == null or .previous == "success" and .result == "success" then "Skip" else
+            '(if .previous == "success" and .result == "success" then "Skip" else
               (if .previous == "failure" and .result == "success" then "Fixed" else
-                (if .previous == "failure" and .result == "failure" then "Still Failing" else "Failed" end)
+                (if .previous == "failure" and .result == "failure" then "Still Failing" else
+                  (if .result == "failure" then "Failed" else "Skip" end)
+                end)
               end)
             end)')
           echo $title
