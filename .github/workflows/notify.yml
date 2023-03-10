@@ -22,11 +22,26 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
+      - name: Previous Conclusion
+        id: previous
+        uses: zzak/action-discord/.github/actions/previous@main
+      - name: Setup statuses
+        id: status
+        run: |
+          result=$(echo '{
+            "previous": ${{ steps.previous.outputs.result }},
+            "result": ${{ inputs.result }},
+          }' | jq '{
+            color: (if .result == "success" then "16711680" else "65280" end),
+            title: (if .previous == "success" and .result == "success" then "Passing" else (if .previous == "failure" and .result == "success" then "Fixed" else (if .previous == "failure" and .result == "failure" then "Still Failing" else "Failed" end) end) end)
+          }')
+          echo $result
+          echo "result=$result" >> $GITHUB_OUTPUT
       - name: Notify
         uses: zzak/action-discord/.github/actions/notify@main
         with:
-          color: "16711680"
-          title: "Failed"
+          color: ${{ steps.status.outputs.result.color }}
+          title: ${{ steps.status.outputs.result.title }}
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
 
   notify_on_fixed:
