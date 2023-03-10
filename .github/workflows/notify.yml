@@ -27,7 +27,7 @@ jobs:
       - name: Setup statuses
         id: status
         run: |
-          color=$(echo ${{ input.result }} | jq --compact-output --raw-output --raw-input \
+          color=$(echo ${{ inputs.result }} | jq --compact-output --raw-output --raw-input \
             '(if . == "success" then "65280" else "16711680" end)')
           echo $color
           echo "color=$color" >> $GITHUB_OUTPUT
