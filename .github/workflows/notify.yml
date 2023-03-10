@@ -22,12 +22,16 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Notify
-        uses: ${{ github.action_path }}/.github/actions/notify/action.yml
-        with:
-          color: "16711680"
-          title: "Failed"
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+      - run: |
+          echo ${{ github.action_path }}
+          ls ${{ github.action_path }}
+          cat ${{ github.action_path }}/.github/actions/notify/action.yml
+      #- name: Notify
+      #  uses: ${{ github.action_path }}/.github/actions/notify/action.yml
+      #  with:
+      #    color: "16711680"
+      #    title: "Failed"
+      #    webhook: ${{ secrets.DISCORD_WEBHOOK }}
 
   notify_on_fixed:
     name: Notify when fixed
@@ -36,13 +40,14 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Previous Conclusion
-        id: previous
-        uses: ${{ github.action_path }}/.github/actions/previous/action.yml
-      - name: Notify
-        uses: ${{ github.action_path }}/.github/actions/notify/action.yml
-        if: ${{ contains(fromJson(steps.previous.outputs.result), 'failure') }}
-        with:
-          color: "65280"
-          title: "Fixed"
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+      - run: echo "Hello, world!"
+      #- name: Previous Conclusion
+      #  id: previous
+      #  uses: ${{ github.action_path }}/.github/actions/previous/action.yml
+      #- name: Notify
+      #  uses: ${{ github.action_path }}/.github/actions/notify/action.yml
+      #  if: ${{ contains(fromJson(steps.previous.outputs.result), 'failure') }}
+      #  with:
+      #    color: "65280"
+      #    title: "Fixed"
+      #    webhook: ${{ secrets.DISCORD_WEBHOOK }}
