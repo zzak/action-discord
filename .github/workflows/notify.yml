@@ -40,8 +40,8 @@ jobs:
       - name: Notify
         uses: zzak/action-discord/.github/actions/notify@main
         with:
-          color: ${{ steps.status.outputs.result.color }}
-          title: ${{ steps.status.outputs.result.title }}
+          color: ${{ toJson(steps.status.outputs.result).color }}
+          title: ${{ toJson(steps.status.outputs.result).title }}
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
 
   notify_on_fixed:
