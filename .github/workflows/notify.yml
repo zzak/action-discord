@@ -36,7 +36,7 @@ jobs:
             "previous": ${{ steps.previous.outputs.result }},
             "result": ${{ toJson(inputs.result) }}
           }' | jq --compact-output --raw-output \
-            '(if .previous == "success" and .result == "success" then "Passing" else
+            '(if .previous == null or .previous == "success" and .result == "success" then "Skip" else
               (if .previous == "failure" and .result == "success" then "Fixed" else
                 (if .previous == "failure" and .result == "failure" then "Still Failing" else "Failed" end)
               end)
@@ -45,7 +45,7 @@ jobs:
           echo "title=$title" >> $GITHUB_OUTPUT
       - name: Notify
         uses: zzak/action-discord/.github/actions/notify@main
-        if: ${{ steps.status.outputs.title != 'Passing' }}
+        if: ${{ steps.status.outputs.title != 'Skip' }}
         with:
           color: ${{ steps.status.outputs.color }}
           title: ${{ steps.status.outputs.title }}
