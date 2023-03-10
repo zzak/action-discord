@@ -17,11 +17,12 @@ runs:
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           /repos/${{ github.repository }}/actions/runs/${{ github.run_id }} | jq .path)
-        resp=$(gh run list -w $path \
+        echo $path
+
+        resp=$(gh run list -w "$path" \
           -R ${{ github.repository }} \
           --branch ${{ github.ref_name }} \
           --json databaseId,status,conclusion)
-
         result=$(echo $resp | jq -c '[.[] | select(.status == "completed")] | first | .conclusion')
         echo $result
         echo "result=$result" >> $GITHUB_OUTPUT
