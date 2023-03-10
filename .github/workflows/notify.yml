@@ -22,6 +22,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
+      - uses: actions/checkout@v3
       - run: |
           echo ${{ github.action_path }}
           ls ${{ github.action_path }}
@@ -40,6 +41,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
+      - uses: actions/checkout@v3
       - run: echo "Hello, world!"
       #- name: Previous Conclusion
       #  id: previous
