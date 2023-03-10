@@ -30,7 +30,7 @@ jobs:
         run: |
           result=$(echo '{
             "previous": ${{ steps.previous.outputs.result }},
-            "result": ${{ inputs.result }},
+            "result": ${{ toJson(inputs.result) }},
           }' | jq '{
             color: (if .result == "success" then "16711680" else "65280" end),
             title: (if .previous == "success" and .result == "success" then "Passing" else (if .previous == "failure" and .result == "success" then "Fixed" else (if .previous == "failure" and .result == "failure" then "Still Failing" else "Failed" end) end) end)
