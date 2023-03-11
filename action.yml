@@ -28,5 +28,6 @@ runs:
       env:
         DISCORD_WEBHOOK: ${{ inputs.webhook }}
         ACTION_DISCORD_STATUS: ${{ inputs.result }}
+        BUNDLE_GEMFILE: ${{ github.action_path }}/Gemfile
       run: |
         bundle exec ruby ${{ github.action_path }}/main.rb
