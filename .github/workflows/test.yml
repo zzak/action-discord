@@ -55,7 +55,7 @@ jobs:
     if: always() && github.ref_name == 'test'
     needs: test
     steps:
-      - uses: zzak/action-discord@ruby
+      - uses: zzak/action-discord@test
         with:
           result: ${{ needs.test.result }}
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
