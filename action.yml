@@ -28,4 +28,4 @@ runs:
         DISCORD_WEBHOOK: ${{ inputs.webhook }}
         ACTION_DISCORD_STATUS: ${{ inputs.result }}
       run: |
-        bundle exec ruby main.rb
+        bundle exec ruby ${{ github.action_path }}/main.rb
