@@ -14,8 +14,6 @@ SHA = ENV["GITHUB_SHA"]
 WORKFLOW = ENV["GITHUB_WORKFLOW"]
 WEBHOOK = ENV["DISCORD_WEBHOOK"]
 
-STATUS = ENV["ACTION_DISCORD_STATUS"]
-
 Octokit.configure do |conf|
   conf.api_endpoint = ENV.fetch("GITHUB_API_URL", "https://api.github.com")
   conf.auto_paginate = true
@@ -24,23 +22,31 @@ end
 @client = Octokit::Client.new(access_token: ENV["GITHUB_TOKEN"])
 
 path = @client.get("/repos/#{REPO}/actions/runs/#{RUN}").path
-
 clean_path = URI.encode_www_form_component(path)
-
 runs = @client.get("/repos/#{REPO}/actions/workflows/#{clean_path}/runs?branch=#{REF}&status=completed")
 previous = runs.workflow_runs.select { |k,v| k.status == "completed" }.first.conclusion
 
+jobs = @client.get("/repos/#{REPO}/actions/runs/#{RUN}/jobs")
+status = jobs.jobs.any? { |job| job.conclusion == "failure"} ? "failure" : "success"
+
+failed = jobs.jobs.each_with_object([]) do |job,arr|
+  if job.conclusion == "failure"
+    name = CGI.escapeHTML(job.name)
+    arr << "- [#{name}](#{job.url})"
+  end
+end
+
 title = "Skip"
 
-if previous == "failure" and STATUS == "success"
+if previous == "failure" and status == "success"
   title = "Fixed"
-elsif previous == "failure" and STATUS == "failure"
+elsif previous == "failure" and status == "failure"
   title = "Still Failing"
-elsif STATUS == "failure"
+elsif status == "failure"
   title = "Failed"
 end
 
-if STATUS == "success"
+if status == "success"
   color = "65280"
 else
   color = "16711680"
@@ -48,14 +54,6 @@ end
 
 if title == "Skip"
   exit 0
-end
-
-jobs = @client.get("/repos/#{REPO}/actions/runs/#{RUN}/jobs")
-failed = jobs.jobs.each_with_object([]) do |job,arr|
-  if job.conclusion == "failure"
-    name = CGI.escapeHTML(job.name)
-    arr << "- [#{name}](#{job.url})"
-  end
 end
 
 resp = @client.get("/repos/#{REPO}/commits/#{SHA}")
