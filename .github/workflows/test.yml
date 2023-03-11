@@ -10,6 +10,25 @@ permissions:
   contents: read
 
 jobs:
+  lint:
+    name: ${{ matrix.type }}
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: ruby/setup-ruby@v1
+      id: setup-ruby
+      with:
+        ruby-version: 3.2
+
+    - name: Lint
+      id: lint
+      run: |
+        exit 1
+
   test:
     name: ${{ matrix.type }}
     permissions:
@@ -46,17 +65,11 @@ jobs:
           exit 1
         fi
 
-    # because continue-on-error marks the steps as pass even if they fail
-    - name: "tests outcome: ${{ steps.tests.outcome }}"
-      run: ""
-
   notify:
     runs-on: ubuntu-latest
     if: always() && github.ref_name == 'test'
-    needs: test
+    needs: [lint, test]
     steps:
       - uses: zzak/action-discord@test
         with:
-          result: ${{ needs.test.result }}
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-

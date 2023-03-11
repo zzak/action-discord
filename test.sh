@@ -5,6 +5,4 @@ export GITHUB_RUN_ID="4389628661"
 export GITHUB_WORKFLOW="zomg"
 export GITHUB_ACTOR="zzak"
 
-export ACTION_DISCORD_STATUS="failure"
-
 bundle exec ruby main.rb
