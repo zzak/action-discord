@@ -1,0 +1,31 @@
+name: action-discord
+description: Sends build notifications to Discord
+author: zzak
+branding:
+  icon: bell
+  color: orange
+
+inputs:
+  webhook:
+    description: Discord webhook URL (should be secrets.DISCORD_WEBHOOK maybe)
+    required: true
+  result:
+    description: Conclusion of the caller workflow
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+    - name: Set up Ruby 3.2
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.2
+        bundler-cache: true
+    - name: Notify
+      shell: bash
+      env:
+        DISCORD_WEBHOOK: ${{ inputs.webhook }}
+        ACTION_DISCORD_STATUS: ${{ inputs.result }}
+      run: |
+        bundle exec ruby main.rb

@@ -51,10 +51,12 @@ jobs:
       run: ""
 
   notify:
-    uses: zzak/action-discord/.github/workflows/notify.yml@main
+    runs-on: ubuntu-latest
     if: always() && github.ref_name == 'test'
     needs: test
-    secrets:
-      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-    with:
-      result: ${{ needs.test.result }}
+    steps:
+      - uses: zzak/action-discord@ruby
+        with:
+          result: ${{ needs.test.result }}
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+
