@@ -29,6 +29,11 @@ jobs:
       run: |
         exit 1
 
+    - uses: zzak/action-discord@test-inline
+      if: always() && github.ref_name == 'test-inline'
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+
   test:
     name: ${{ matrix.type }}
     permissions:
@@ -64,12 +69,8 @@ jobs:
           echo $type
           exit 1
         fi
-
-  notify:
-    runs-on: ubuntu-latest
-    if: always() && github.ref_name == 'test'
-    needs: [lint, test]
-    steps:
-      - uses: zzak/action-discord@test
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        
+    - uses: zzak/action-discord@test-inline
+      if: always() && github.ref_name == 'test-inline'
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
