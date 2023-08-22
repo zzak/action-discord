@@ -29,8 +29,8 @@ jobs:
       run: |
         exit 1
 
-    - uses: zzak/action-discord@test
-      if: always() && github.ref_name == 'test'
+    - uses: zzak/action-discord@inline
+      if: always() && github.ref_name == 'inline'
       with:
         webhook: ${{ secrets.DISCORD_WEBHOOK }}
 
@@ -70,8 +70,8 @@ jobs:
           exit 1
         fi
 
-    - uses: zzak/action-discord@test
-      if: always() && github.ref_name == 'test'
+    - uses: zzak/action-discord@inline
+      if: always() && github.ref_name == 'inline'
       with:
         webhook: ${{ secrets.DISCORD_WEBHOOK }}
 
