@@ -19,7 +19,11 @@ Octokit.configure do |conf|
   conf.auto_paginate = true
 end
 
-@client = Octokit::Client.new(access_token: ENV["GITHUB_TOKEN"])
+def github_token
+  ENV.fetch("GITHUB_TOKEN") { raise "Missing $GITHUB_TOKEN!" }
+end
+
+@client = Octokit::Client.new(access_token: github_token)
 
 path = @client.get("/repos/#{REPO}/actions/runs/#{RUN}").path
 clean_path = URI.encode_www_form_component(path)
