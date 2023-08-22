@@ -57,6 +57,8 @@ else
 end
 
 if title == "Skip"
+  puts "Skipping..."
+  puts "Previous: #{previous}"
   exit 0
 end
 
