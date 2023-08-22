@@ -12,11 +12,14 @@ RUN = ENV["GITHUB_RUN_ID"]
 REF = ENV["GITHUB_REF_NAME"]
 SHA = ENV["GITHUB_SHA"]
 WORKFLOW = ENV["GITHUB_WORKFLOW"]
-WEBHOOK = ENV["DISCORD_WEBHOOK"]
 
 Octokit.configure do |conf|
   conf.api_endpoint = ENV.fetch("GITHUB_API_URL", "https://api.github.com")
   conf.auto_paginate = true
+end
+
+def discord_webhook
+  ENV.fetch("DISCORD_WEBHOOK") { raise "Missing $DISCORD_WEBHOOK!" }
 end
 
 def github_token
@@ -97,7 +100,7 @@ if failed.count > 0
   payload[:embeds].first[:fields] << add_field("Failed Job(s)", failed.join("\n"), false)
 end
 
-uri = URI.parse(WEBHOOK)
+uri = URI.parse(discord_webhook)
 http = Net::HTTP.new(uri.host, uri.port)
 http.use_ssl = true
 
