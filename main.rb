@@ -31,7 +31,8 @@ end
 path = @client.get("/repos/#{REPO}/actions/runs/#{RUN}").path
 clean_path = URI.encode_www_form_component(path)
 runs = @client.get("/repos/#{REPO}/actions/workflows/#{clean_path}/runs?branch=#{REF}&status=completed")
-previous = runs.workflow_runs.select { |k,v| k.status == "completed" }.first.try(:conclusion)
+previous = runs.workflow_runs.select { |run| run.status == "completed" }.first
+last = previous.nil ? nil : previous.conclusion
 
 jobs = @client.get("/repos/#{REPO}/actions/runs/#{RUN}/jobs")
 status = jobs.jobs.any? { |job| job.conclusion == "failure"} ? "failure" : "success"
@@ -45,9 +46,9 @@ end
 
 title = "Skip"
 
-if previous == "failure" and status == "success"
+if last == "failure" and status == "success"
   title = "Fixed"
-elsif previous == "failure" and status == "failure"
+elsif last == "failure" and status == "failure"
   title = "Still Failing"
 elsif status == "failure"
   title = "Failed"
@@ -61,7 +62,6 @@ end
 
 if title == "Skip"
   puts "Skipping..."
-  puts "Previous: #{previous}"
   exit 0
 end
 
