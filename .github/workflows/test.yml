@@ -72,4 +72,5 @@ jobs:
     steps:
       - uses: zzak/action-discord@test
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           webhook: ${{ secrets.DISCORD_WEBHOOK }}

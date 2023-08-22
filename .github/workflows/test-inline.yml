@@ -32,6 +32,7 @@ jobs:
     - uses: zzak/action-discord@test
       if: always() && github.ref_name == 'test'
       with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         webhook: ${{ secrets.DISCORD_WEBHOOK }}
 
   test:
@@ -73,5 +74,6 @@ jobs:
     - uses: zzak/action-discord@test
       if: always() && github.ref_name == 'test'
       with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         webhook: ${{ secrets.DISCORD_WEBHOOK }}
 

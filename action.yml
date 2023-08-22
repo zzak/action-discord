@@ -9,6 +9,14 @@ inputs:
   webhook:
     description: Discord webhook URL (should be secrets.DISCORD_WEBHOOK maybe)
     required: true
+  github-token:
+    description: |
+      Github Token for the Action (should be secrets.GITHUB_TOKEN)
+
+      See:
+      https://docs.github.com/en/actions/security-guides/automatic-token-authentication#example-1-passing-the-github_token-as-an-input
+    required: true
+
 
 runs:
   using: composite
@@ -25,6 +33,6 @@ runs:
       env:
         DISCORD_WEBHOOK: ${{ inputs.webhook }}
         BUNDLE_GEMFILE: ${{ github.action_path }}/Gemfile
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
         bundle exec ruby ${{ github.action_path }}/main.rb
