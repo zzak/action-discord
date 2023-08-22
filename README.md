@@ -1,3 +1,20 @@
+# action-discord
+
+This action is designed to be a very simple step you add to an existing job in order to send a notification to discord when it fails.
+
+<img width="414" alt="Screenshot 2023-08-23 at 8 47 34" src="https://github.com/zzak/action-discord/assets/277819/b21973c2-7230-4153-9030-46bd3a74040e">
+
+```yaml
+# Only notify when fail on main branch
+- uses: zzak/action-discord@v6
+  if: failure() && github.ref_name == 'main'
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    webhook: ${{ secrets.DISCORD_WEBHOOK }}
+```
+
+---
+
 ## How to setup
 
 We need to pass the `DISCORD_WEBHOOK` url into this action.
@@ -18,16 +35,3 @@ We need to pass the `DISCORD_WEBHOOK` url into this action.
 
 ![Screenshot 2023-03-12 at 8 17 59](https://user-images.githubusercontent.com/277819/224515693-d28e6697-38ef-4f97-9872-080709acdfe3.png)
 
----
-
-## Examples
-
-****Still failing****
-
-<img width="519" alt="Screenshot 2023-03-12 at 8 07 06" src="https://user-images.githubusercontent.com/277819/224515772-8adcde46-3769-4585-a911-8fb68ac3b2dd.png">
-
-****Fixed****
-
-<img width="430" alt="Screenshot 2023-03-12 at 8 07 27" src="https://user-images.githubusercontent.com/277819/224515788-a3803878-50ce-4eb5-877e-e8ccd62a0a19.png">
-
- **(Using v1 output, compressed repo/branch into title like BK notifs in v4)**
