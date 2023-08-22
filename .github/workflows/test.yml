@@ -1,10 +1,6 @@
-name: Testing
+name: Test Workflow
 
-on:
-  push:
-    branches:
-      - '**'
-  pull_request:
+on: push
 
 permissions:
   contents: read
@@ -28,6 +24,12 @@ jobs:
       id: lint
       run: |
         exit 1
+
+    - uses: zzak/action-discord@test
+      if: failure() && github.ref_name == 'test'
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
 
   test:
     name: ${{ matrix.type }}
@@ -65,12 +67,9 @@ jobs:
           exit 1
         fi
 
-  notify:
-    runs-on: ubuntu-latest
-    if: always() && github.ref_name == 'test'
-    needs: [lint, test]
-    steps:
-      - uses: zzak/action-discord@test
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+    - uses: zzak/action-discord@test
+      if: failure() && github.ref_name == 'test'
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+

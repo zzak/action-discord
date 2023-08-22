@@ -31,6 +31,7 @@ runs:
     - name: Notify
       shell: bash
       env:
+        ACTION_DISCORD_JOB_ID: ${{ github.job }}
         DISCORD_WEBHOOK: ${{ inputs.webhook }}
         BUNDLE_GEMFILE: ${{ github.action_path }}/Gemfile
         GITHUB_TOKEN: ${{ inputs.github-token }}
