@@ -24,7 +24,7 @@ end
 path = @client.get("/repos/#{REPO}/actions/runs/#{RUN}").path
 clean_path = URI.encode_www_form_component(path)
 runs = @client.get("/repos/#{REPO}/actions/workflows/#{clean_path}/runs?branch=#{REF}&status=completed")
-previous = runs.workflow_runs.select { |k,v| k.status == "completed" }.first.conclusion
+previous = runs.workflow_runs.select { |k,v| k.status == "completed" }.first.try(:conclusion)
 
 jobs = @client.get("/repos/#{REPO}/actions/runs/#{RUN}/jobs")
 status = jobs.jobs.any? { |job| job.conclusion == "failure"} ? "failure" : "success"
