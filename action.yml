@@ -25,5 +25,6 @@ runs:
       env:
         DISCORD_WEBHOOK: ${{ inputs.webhook }}
         BUNDLE_GEMFILE: ${{ github.action_path }}/Gemfile
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         bundle exec ruby ${{ github.action_path }}/main.rb
