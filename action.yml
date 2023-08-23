@@ -34,6 +34,8 @@ runs:
         ACTION_DISCORD_JOB_ID: ${{ github.job }}
         DISCORD_WEBHOOK: ${{ inputs.webhook }}
         BUNDLE_GEMFILE: ${{ github.action_path }}/Gemfile
+        BUNDLE_ONLY: ""
+        BUNDLE_WITHOUT: ""
         GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
         bundle exec ruby ${{ github.action_path }}/main.rb
