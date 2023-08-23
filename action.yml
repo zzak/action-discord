@@ -22,11 +22,6 @@ runs:
   using: composite
   steps:
     - uses: actions/checkout@v3
-    - name: Reset bundler env
-      run: |
-        echo "BUNDLE_ONLY='' >> $GITHUB_ENV"
-        echo "BUNDLE_WITHOUT='' >> $GITHUB_ENV"
-      shell: bash
     - name: Set up Ruby 3.2
       uses: ruby/setup-ruby@v1
       with:

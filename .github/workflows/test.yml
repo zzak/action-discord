@@ -12,8 +12,6 @@ jobs:
       contents: read
       actions: read
     runs-on: ubuntu-latest
-    env:
-      BUNDLE_ONLY: rubocop
     steps:
     - uses: actions/checkout@v3
 
