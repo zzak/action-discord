@@ -12,6 +12,8 @@ jobs:
       contents: read
       actions: read
     runs-on: ubuntu-latest
+    env:
+      BUNDLE_ONLY: rubocop
     steps:
     - uses: actions/checkout@v3
 
@@ -48,11 +50,6 @@ jobs:
       type: ${{ matrix.type }}
     steps:
     - uses: actions/checkout@v3
-
-    - uses: ruby/setup-ruby@v1
-      id: setup-ruby
-      with:
-        ruby-version: 3.2
 
     - name: Test
       continue-on-error: ${{ matrix.allow-failure || false }}
