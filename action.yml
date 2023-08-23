@@ -22,6 +22,11 @@ runs:
   using: composite
   steps:
     - uses: actions/checkout@v3
+    - name: Reset bundler env
+      run: |
+        echo "BUNDLE_ONLY="
+        echo "BUNDLE_WITHOUT="
+      shell: bash
     - name: Set up Ruby 3.2
       uses: ruby/setup-ruby@v1
       with:
@@ -34,8 +39,6 @@ runs:
         ACTION_DISCORD_JOB_ID: ${{ github.job }}
         DISCORD_WEBHOOK: ${{ inputs.webhook }}
         BUNDLE_GEMFILE: ${{ github.action_path }}/Gemfile
-        BUNDLE_ONLY: ""
-        BUNDLE_WITHOUT: ""
         GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
         bundle exec ruby ${{ github.action_path }}/main.rb
